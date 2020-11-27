@@ -356,3 +356,6 @@ MigrationBackup/
 #Discord Log file
 
 discord.log
+
+#Ingore env file
+.env
