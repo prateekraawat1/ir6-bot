@@ -1,6 +1,11 @@
 import os
 import discord
 import random
+import pymongo
+import dns
+
+#for optional parameters / skip parameters in functions
+import typing
 
 from dotenv import load_dotenv
 
@@ -8,6 +13,8 @@ from discord.ext import commands
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
+DBUSER = os.getenv('MONGODB_USER')
+DBPASS = os.getenv('MONGODB_PASS')
 
 bot = commands.Bot(command_prefix = "!")
 
@@ -21,6 +28,17 @@ handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(me
 logger.addHandler(handler)
 # end of logging
 
+
+#Setting up mongoDB
+
+dbClient = pymongo.MongoClient("mongodb+srv://carlbot:prateek23@sar6.tiqn4.mongodb.net/carlbot?retryWrites=true&w=majority")
+db = dbClient.test
+
+"""
+#print all available databases in the cluster
+dblist = dbClient.list_database_names()
+print(dblist)
+"""
 @bot.event 
 async def on_ready():
     print(f'{bot.user.name} has connected!')
@@ -54,7 +72,8 @@ async def _hi(ctx):
 async def ping(ctx):
     await ctx.send(f'Pong! {round(bot.latency * 1000)}ms')
 
-@bot.command()
+@bot.command(name = 'delete')
+@commands.has_permissions(manage_messages=True)
 async def delete(ctx, amount: int):
     if amount == 0:
         await ctx.send("Nothing to delete!")
