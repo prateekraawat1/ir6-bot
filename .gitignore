@@ -353,9 +353,7 @@ MigrationBackup/
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
 
-#Discord Log file
 
+#Ingore local file
 discord.log
-
-#Ingore env file
 .env
