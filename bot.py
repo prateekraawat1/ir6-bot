@@ -32,19 +32,22 @@ logger.addHandler(handler)
 #Setting up mongoDB
 
 dbClient = pymongo.MongoClient("mongodb+srv://carlbot:prateek23@sar6.tiqn4.mongodb.net/carlbot?retryWrites=true&w=majority")
-db = dbClient.test
+db = dbClient["carlbot"]
+dbCol = db['teams']
 
 """
 #print all available databases in the cluster
 dblist = dbClient.list_database_names()
 print(dblist)
 """
+
+
 @bot.event 
 async def on_ready():
     print(f'{bot.user.name} has connected!')
 
 @bot.command(name='99')
-async def nine_nine(self, ctx):
+async def nine_nine(ctx):
     #if ctx.author == self.author
         #return
 
@@ -81,9 +84,17 @@ async def delete(ctx, amount: int):
         await ctx.channel.purge(limit = amount+1)
         await ctx.send(f'{amount} messages deleted!')
 
-@commands.command()
+@bot.command()
 async def register(ctx, *, team):
+    async with ctx.typing():
+        await ctx.send("\nEnter the Team Captain Name followed by players.\nExample: \nCarlJohnson#0041\nCarlJohnson#0000\n...\nOnce all members are listed type `done`.")
+        players = []
+        while (True):
+            message = await bot.wait_for('message')
+            if(message.content == "done"):
+                break
+            players.append(message.content)
+            #await ctx.send(message.content)
     await ctx.send(f"Team {team} Registered!")
-bot.add_command(register)
 
 bot.run(TOKEN)
