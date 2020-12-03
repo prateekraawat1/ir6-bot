@@ -85,9 +85,10 @@ async def delete(ctx, amount: int):
         await ctx.send(f'{amount} messages deleted!')
 
 @bot.command()
-async def register(ctx, *, team):
+async def register(ctx, team, country, captain):
     async with ctx.typing():
         await ctx.send("\nEnter the Team Captain Name followed by players.\nExample: \nCarlJohnson#0041\nCarlJohnson#0000\n...\nOnce all members are listed type `done`.")
+        oldString = ctx.message.content
         players = []
         while (True):
             message = await bot.wait_for('message')
@@ -95,6 +96,21 @@ async def register(ctx, *, team):
                 break
             players.append(message.content)
             #await ctx.send(message.content)
+    
+    print(players)
+    playerCount = len(players)
+    print(playerCount)
+    #To-do replace by null and handle it accordingly
+    for i in range(playerCount - 1, 6):
+        players.append('')
+    teamDb = {"teamName": team, "country": country, "captain": captain, "player2": players[0], "player3": players[1], "player4": players[2], "player5": players[3], "player6": players[4], "player7": players[5]}
+    x = dbCol.insert_one(teamDb)
+    print(x.inserted_id)
     await ctx.send(f"Team {team} Registered!")
+    #await ctx.send([x for x in players])
 
+@register.error
+async def register_error(ctx, error):
+    if isinstance(error, commands.MissingRequiredArgument):
+        await ctx.send('Missing required parameters! Usage `!register [team-name] [country]`')
 bot.run(TOKEN)
