@@ -87,13 +87,16 @@ async def delete(ctx, amount: int):
 
 
 ##
-##To-Do Check if the team already exists in database
-##
+##To-Do Check if the team already exists in database and handle parameter exceptions
+##To-Do Allow spaces in team name? or possible use underscore
 @bot.command()
 async def register(ctx, team, country, captain, viceCaptain):
+    from discord.utils import get
     async with ctx.typing():
         countries = ["india", "bangladesh", "srilanka", "pakistan"]
         country = country.lower()
+        ROLE = "Team Captain"
+        user = ctx.author
         if (country not in countries):
             print("Invalid country entered!")
             await ctx.send("Invalid country! Valid countries are: `India`, `Bangladesh`, `SriLanka`, `Pakistan`")
@@ -108,16 +111,29 @@ async def register(ctx, team, country, captain, viceCaptain):
             "viceCaptain": viceCaptain,
             "token": token
         }
+        #inserting data in database
         x = dbCol.insert_one(teamDb)
         print(x.inserted_id)
-        ctx.author.send("Your team token: `" + token + "`\nYou will need this token in case you want to delete your existing team.\nIf you face any error such as invalid token or something similar please contact `CarlJohnson#0041`")
+        
+        #give user team captain role
+        print("gave team captain role to " + user)
+        role = get(user.guild.roles, name = ROLE)
+        await user.add_roles(role)
+        #sending dm to user with their token
+    await ctx.author.send("Your team token: `" + token + "`\nYou will need this token in case you want to delete your existing team.\nIf you face any error such as invalid token or something similar please contact `CarlJohnson#0041`")
     await ctx.send(f"Team {team} Registered!")
+    print(f"team {team} registered")
     #await ctx.send([x for x in players])
 
 @register.error
 async def register_error(ctx, error):
     if isinstance(error, commands.MissingRequiredArgument):
         await ctx.send('Missing required parameters! Usage `!register [team-name] [country] [captain] [vice-captain/coach]`')
+
+
+@bot.command(name="deleteteam")
+async def deleteteam(ctx):
+    await ctx.send("")
 
 
 def generateToken():
