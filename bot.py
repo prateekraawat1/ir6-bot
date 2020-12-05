@@ -91,7 +91,6 @@ async def delete(ctx, amount: int):
 ##
 @bot.command()
 async def register(ctx, team, country, captain, viceCaptain):
-    
     async with ctx.typing():
         countries = ["india", "bangladesh", "srilanka", "pakistan"]
         country = country.lower()
@@ -111,6 +110,7 @@ async def register(ctx, team, country, captain, viceCaptain):
         }
         x = dbCol.insert_one(teamDb)
         print(x.inserted_id)
+        ctx.author.send("Your team token: `" + token + "`\nYou will need this token in case you want to delete your existing team.\nIf you face any error such as invalid token or something similar please contact `CarlJohnson#0041`")
     await ctx.send(f"Team {team} Registered!")
     #await ctx.send([x for x in players])
 
