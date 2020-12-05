@@ -91,7 +91,14 @@ async def delete(ctx, amount: int):
 ##
 @bot.command()
 async def register(ctx, team, country, captain, viceCaptain):
+    
     async with ctx.typing():
+        countries = ["india", "bangladesh", "srilanka", "pakistan"]
+        country = country.lower()
+        if (country not in countries):
+            print("Invalid country entered!")
+            await ctx.send("Invalid country! Valid countries are: `India`, `Bangladesh`, `SriLanka`, `Pakistan`")
+            return 
         await ctx.send("\nRegistering Team")
         #oldString = ctx.message.content
         token = generateToken()
