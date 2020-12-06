@@ -15,7 +15,7 @@ load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 DBUSER = os.getenv('MONGODB_USER')
 DBPASS = os.getenv('MONGODB_PASS')
-
+DISCORDID = os.getenv('DISCORD_ID')
 bot = commands.Bot(command_prefix = "!")
 
 #loggin errors
@@ -90,7 +90,7 @@ async def delete(ctx, amount: int):
 ##To-Do Check if the team already exists in database and handle parameter exceptions
 ##To-Do Allow spaces in team name? or possible use underscore
 @bot.command()
-async def register(ctx, team, country, captain, viceCaptain):
+async def register(ctx, country, captain, viceCaptain, *, team):
     from discord.utils import get
     async with ctx.typing():
         countries = ["india", "bangladesh", "srilanka", "pakistan"]
@@ -120,7 +120,7 @@ async def register(ctx, team, country, captain, viceCaptain):
         role = get(user.guild.roles, name = ROLE)
         await user.add_roles(role)
         #sending dm to user with their token
-    await ctx.author.send("Your team token: `" + token + "`\nYou will need this token in case you want to delete your existing team.\nIf you face any error such as invalid token or something similar please contact `CarlJohnson#0041`")
+    await ctx.author.send("Your team token: `" + token + f"`\nYou will need this token in case you want to delete your existing team.\nIf you face any error such as invalid token or something similar please contact `{DISCORDID}`")
     await ctx.send(f"Team {team} Registered!")
     print(f"team {team} registered")
     #await ctx.send([x for x in players])
@@ -128,12 +128,28 @@ async def register(ctx, team, country, captain, viceCaptain):
 @register.error
 async def register_error(ctx, error):
     if isinstance(error, commands.MissingRequiredArgument):
-        await ctx.send('Missing required parameters! Usage `!register [team-name] [country] [captain] [vice-captain/coach]`')
+        await ctx.send('Missing required parameters! Usage `!register [country] [captain] [vice-captain/coach] [teamname]`')
+        
 
 
 @bot.command(name="deleteteam")
-async def deleteteam(ctx):
-    await ctx.send("")
+async def deleteteam(ctx, token):
+    deleteQuery = {"token": token}
+    try:
+        x = dbCol.find_one(deleteQuery)
+        if (x == None):
+            await ctx.channel.purge(limit = 1)
+            await ctx.send(f"Team not found! Ensure you are using the correct token or contact `{DISCORDID}`")
+            return
+        team = x["teamName"]
+        print("Deleting team " + team)
+        dbCol.delete_one(deleteQuery)
+        await ctx.channel.purge(limit = 1)
+        await ctx.send(f"Team {team} deleted!")
+    except:
+        
+        await ctx.send(f"Error! Team cannot be deleted! Contact `{DISCORDID}` if the problem persists.")
+    
 
 
 def generateToken():
