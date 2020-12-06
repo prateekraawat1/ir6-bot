@@ -112,7 +112,7 @@ async def register(ctx, country, captain, viceCaptain, *, team):
         x = dbCol.insert_one(teamDb)
         print(x.inserted_id)
         #sending dm to user with their token
-        await ctx.author.send("Your team token: `" + token + "`\nYou will need this token in case you want to delete your existing team.\nIf you face any error such as invalid token or something similar please contact `CarlJohnson#0041`")
+        await ctx.author.send(f"Your team `{team}`\'s token: `{token}`\n\nYou will need this token in case you want to delete your existing team.\nIf you face any error such as invalid token or something similar please contact `{DISCORD_ID}`")
     #give user team captain role
     ROLE = "Team Captain"
     user = ctx.author
