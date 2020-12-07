@@ -146,6 +146,26 @@ async def deleteteam(ctx, token):
         await ctx.channel.purge(limit = 1)
         await ctx.send(f"Error! Team cannot be deleted! Contact `{DISCORD_ID}` if the problem persists.")
 
+
+@bot.command(name = "listallteams")
+@commands.has_permissions(manage_roles=True)
+async def listallteams(ctx):
+    team = ""
+    country = ""
+    captain = ""
+    viceCaptain = ""
+    for x in dbCol.find({}, {"_id": 0, "token": 0}):
+        team = x["teamName"]
+        country = x["country"]
+        captain = x["captain"]
+        viceCaptain = x["viceCaptain"]
+
+        embeded = discord.Embed(title = team)
+        embeded.add_field(name = "Country", value = country, inline = False)
+        embeded.add_field(name = "Captain", value = captain, inline = False)    
+        embeded.add_field(name = "Vice Captain", value = viceCaptain, inline = False)
+        await ctx.send(embed = embeded)
+
 def generateToken():
     import string
     import secrets
