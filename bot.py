@@ -130,6 +130,7 @@ async def register_error(ctx, error):
 
 @bot.command(name="deleteteam")
 async def deleteteam(ctx, token):
+    from discord.utils import get
     deleteQuery = {"token": token}
     try:
         x = dbCol.find_one(deleteQuery)
@@ -142,6 +143,12 @@ async def deleteteam(ctx, token):
         dbCol.delete_one(deleteQuery)
         await ctx.channel.purge(limit = 1)
         await ctx.send(f"Team {team} deleted!")
+        #take user team captain role
+        ROLE = "Team Captain"
+        user = ctx.author
+        role = get(user.guild.roles, name = ROLE)
+        print(f"Removing Captain role from {user}")
+        await user.remove_roles(role)
     except:
         await ctx.channel.purge(limit = 1)
         await ctx.send(f"Error! Team cannot be deleted! Contact `{DISCORD_ID}` if the problem persists.")
