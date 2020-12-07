@@ -160,7 +160,7 @@ async def listallteams(ctx):
         captain = x["captain"]
         viceCaptain = x["viceCaptain"]
 
-        embeded = discord.Embed(title = team)
+        embeded = discord.Embed(title = team, color = 0xff0000)
         embeded.add_field(name = "Country", value = country, inline = False)
         embeded.add_field(name = "Captain", value = captain, inline = False)    
         embeded.add_field(name = "Vice Captain", value = viceCaptain, inline = False)
