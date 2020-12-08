@@ -67,7 +67,7 @@ async def nine_nine(ctx):
 @bot.command(aliases=['hi', 'hello'])
 async def _hi(ctx):
     """
-    docstring
+    Get a hello from bot
     """
     response = "Hello!"
     await ctx.send(response)
@@ -209,8 +209,34 @@ async def find_error(ctx, error):
         await ctx.send('Missing required parameters! Usage `!deleteteam <token>`')
 
 @bot.command(name = "teams")
-async def teams(ctx, country):
-    await ctx.send("")
+async def teams(ctx, sCountry, count = 5):
+    if (count <= 0):
+        await ctx.send("Count should be greater than 0")
+        return
+    countries = ["india", "bangladesh", "srilanka", "pakistan"]
+    sCountry = sCountry.lower()
+    if (sCountry not in countries):
+        print("Invalid country entered!")
+        await ctx.send("Invalid country! Valid countries are: `India`, `Bangladesh`, `SriLanka`, `Pakistan`")
+        return 
+    
+    team = ""
+    country = ""
+    captain = ""
+    viceCaptain = ""
+    searchQuery = {"country": sCountry}
+    result = dbCol.find(searchQuery).limit(count)
+    for x in result:
+        team = x["teamName"]
+        country = x["country"]
+        captain = x["captain"]
+        viceCaptain = x["viceCaptain"]
+
+        embeded = discord.Embed(title = team, color = 0xff0000)
+        embeded.add_field(name = "Country", value = country, inline = False)
+        embeded.add_field(name = "Captain", value = captain, inline = False)    
+        embeded.add_field(name = "Vice Captain", value = viceCaptain, inline = False)
+        await ctx.send(embed = embeded)
 
 def generateToken():
     import string
