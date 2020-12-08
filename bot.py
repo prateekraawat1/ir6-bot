@@ -90,8 +90,8 @@ async def delete(ctx, amount: int):
 ##
 ##To-Do Check if the team already exists in database
 ##
-@bot.command()
-async def register(ctx, country, captain, viceCaptain, *, team):
+@bot.command(name = 'registerteam')
+async def registerteam(ctx, country, captain, viceCaptain, *, team):
     from discord.utils import get
     async with ctx.typing():
         countries = ["india", "bangladesh", "srilanka", "pakistan"]
@@ -122,11 +122,11 @@ async def register(ctx, country, captain, viceCaptain, *, team):
     await ctx.send(f"Team `{team}` Registered!")
     print(f"team {team} registered")
 
-@register.error
+@registerteam.error
 async def register_error(ctx, error):
     if isinstance(error, commands.MissingRequiredArgument):
-        await ctx.send('Missing required parameters! Usage `!register [country] [captain] [vice-captain/coach] [teamname]`')
-        await ctx.send('Example: `!register India Test Testuser@1231 TestUser2@1231 Testing`')
+        await ctx.send('Missing required parameters! Usage `!registerteam [country] [captain] [vice-captain/coach] [teamname]`')
+        await ctx.send('Example: `!registerteam India Test Testuser@1231 TestUser2@1231 Testing`')
 
 
 @bot.command(name="deleteteam")
@@ -154,8 +154,8 @@ async def deleteteam(ctx, token):
         await ctx.channel.purge(limit = 1)
         await ctx.send(f"Error! Team cannot be deleted! Contact `{DISCORD_ID}` if the problem persists.")
 
-@register.error
-async def register_error(ctx, error):
+@deleteteam.error
+async def delete_error(ctx, error):
     if isinstance(error, commands.MissingRequiredArgument):
         await ctx.send('Missing required parameters! Usage `!deleteteam <token>`')
 
@@ -178,8 +178,39 @@ async def listallteams(ctx):
         embeded.add_field(name = "Vice Captain", value = viceCaptain, inline = False)
         await ctx.send(embed = embeded)
 
+@bot.command(name = 'findteam')
+async def findteam(ctx, team):
+    import re
+    if (len(team)) < 3:
+        await ctx.send("Enter at least 3 letters of the team name")
+    regEx = ".*" + team + ".*"
+    team = ""
+    country = ""
+    captain = ""
+    viceCaptain = ""
 
+    
+    result = dbCol.find({"teamName": re.compile(regEx, re.IGNORECASE)}, {"_id": 0, "token": 0}).limit(5)
+    for x in result:
+        team = x["teamName"]
+        country = x["country"]
+        captain = x["captain"]
+        viceCaptain = x["viceCaptain"]
 
+        embeded = discord.Embed(title = team, color = 0xff0000)
+        embeded.add_field(name = "Country", value = country, inline = False)
+        embeded.add_field(name = "Captain", value = captain, inline = False)    
+        embeded.add_field(name = "Vice Captain", value = viceCaptain, inline = False)
+        await ctx.send(embed = embeded)
+
+@findteam.error
+async def find_error(ctx, error):
+    if isinstance(error, commands.MissingRequiredArgument):
+        await ctx.send('Missing required parameters! Usage `!deleteteam <token>`')
+
+@bot.command(name = "teams")
+async def teams(ctx, country):
+    await ctx.send("")
 
 def generateToken():
     import string
