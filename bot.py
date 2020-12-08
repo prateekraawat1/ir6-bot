@@ -126,6 +126,7 @@ async def register(ctx, country, captain, viceCaptain, *, team):
 async def register_error(ctx, error):
     if isinstance(error, commands.MissingRequiredArgument):
         await ctx.send('Missing required parameters! Usage `!register [country] [captain] [vice-captain/coach] [teamname]`')
+        await ctx.send('Example: `!register India Test Testuser@1231 TestUser2@1231 Testing`')
 
 
 @bot.command(name="deleteteam")
@@ -153,6 +154,10 @@ async def deleteteam(ctx, token):
         await ctx.channel.purge(limit = 1)
         await ctx.send(f"Error! Team cannot be deleted! Contact `{DISCORD_ID}` if the problem persists.")
 
+@register.error
+async def register_error(ctx, error):
+    if isinstance(error, commands.MissingRequiredArgument):
+        await ctx.send('Missing required parameters! Usage `!deleteteam <token>`')
 
 @bot.command(name = "listallteams")
 @commands.has_permissions(manage_roles=True)
@@ -172,6 +177,9 @@ async def listallteams(ctx):
         embeded.add_field(name = "Captain", value = captain, inline = False)    
         embeded.add_field(name = "Vice Captain", value = viceCaptain, inline = False)
         await ctx.send(embed = embeded)
+
+
+
 
 def generateToken():
     import string
