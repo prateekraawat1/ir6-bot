@@ -94,6 +94,12 @@ async def delete(ctx, amount: int):
 async def registerteam(ctx, country, captain, viceCaptain, *, team):
     from discord.utils import get
     async with ctx.typing():
+        if not (userNameCheck(captain)):
+            await ctx.send("Invalid Captain ID, should be a discord tag!")
+            return
+        if not (userNameCheck(viceCaptain)):
+            await ctx.send("Invalid Vice-Captain ID, should be a discord tag!")
+            return
         countries = ["india", "bangladesh", "srilanka", "pakistan"]
         country = country.lower()
         if (country not in countries):
@@ -247,6 +253,12 @@ def generateToken():
     print("Token generated: " + token)
     return token
 
-
+def userNameCheck(username):
+    import re
+    regex = '^[A-Za-z0-9]+[\._]?[A-Za-z0-9]+[#]+[0-9]+[0-9]+[0-9]+[0-9]'
+    if(re.search(regex,username)):  
+        return True
+    else:
+        return False
 
 bot.run(TOKEN)
