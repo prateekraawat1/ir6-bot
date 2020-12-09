@@ -1,0 +1,5 @@
+discord
+dotenv
+logging
+pymongo
+dns
