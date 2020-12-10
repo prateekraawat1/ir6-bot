@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import os
 import discord
 import random
@@ -106,7 +107,7 @@ async def registerteam(ctx, country, captain, viceCaptain, *, team):
             print("Invalid country entered!")
             await ctx.send("Invalid country! Valid countries are: `India`, `Bangladesh`, `SriLanka`, `Pakistan`")
             return 
-        await ctx.send("\nRegistering Team")
+        await ctx.send("\nRegistering Team...")
         token = generateToken()
         teamDb = {
             "teamName": team,
