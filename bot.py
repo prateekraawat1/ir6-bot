@@ -256,7 +256,7 @@ def generateToken():
 
 def userNameCheck(username):
     import re
-    regex = '^[A-Za-z0-9]+[\._]?[A-Za-z0-9]+[#]+[0-9]+[0-9]+[0-9]+[0-9]'
+    regex = '^[A-Za-z0-9!_;:\.\$\-\(\)]+[#]+\d{4}$'
     if(re.search(regex,username)):  
         return True
     else:
