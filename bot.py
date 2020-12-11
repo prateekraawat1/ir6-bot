@@ -168,22 +168,52 @@ async def delete_error(ctx, error):
 
 @bot.command(name = "listallteams")
 @commands.has_permissions(manage_roles=True)
-async def listallteams(ctx):
-    team = ""
-    country = ""
-    captain = ""
-    viceCaptain = ""
-    for x in dbCol.find({}, {"_id": 0, "token": 0}):
-        team = x["teamName"]
-        country = x["country"]
-        captain = x["captain"]
-        viceCaptain = x["viceCaptain"]
+async def listallteams(ctx, option):
+    option = option.lower()
+    if (option == 'embedded'):
+        team = ""
+        country = ""
+        captain = ""
+        viceCaptain = ""
+        for x in dbCol.find({}, {"_id": 0, "token": 0}):
+            team = x["teamName"]
+            country = x["country"].title()
+            captain = x["captain"]
+            viceCaptain = x["viceCaptain"]
 
-        embeded = discord.Embed(title = team, color = 0xff0000)
-        embeded.add_field(name = "Country", value = country, inline = False)
-        embeded.add_field(name = "Captain", value = captain, inline = False)    
-        embeded.add_field(name = "Vice Captain", value = viceCaptain, inline = False)
-        await ctx.send(embed = embeded)
+            embeded = discord.Embed(title = team, color = 0xff0000)
+            embeded.add_field(name = "Country", value = country, inline = False)
+            embeded.add_field(name = "Captain", value = captain, inline = False)    
+            embeded.add_field(name = "Vice Captain", value = viceCaptain, inline = False)
+            await ctx.send(embed = embeded)
+
+    elif(option == 'list'):
+        team = ""
+        country = ""
+        captain = ""
+        viceCaptain = ""
+        count = 1
+        teamlist = []
+        printString = "Team Name\tCountry\tCaptain\tVice Captain\n\n"
+        for x in dbCol.find({}, {"_id": 0, "token": 0}):
+            team = x["teamName"]
+            country = x["country"].title()
+            captain = x["captain"]
+            viceCaptain = x["viceCaptain"]
+
+            #await ctx.send(f'{count}) \t{team}\t{country}\t{captain}\t{viceCaptain}\n\n')
+            teamString = "{}) \t{}\t{}\t{}\t{}\n".format(count, team, country, captain, viceCaptain)
+            teamlist.append(teamString)
+            count += 1
+
+        for x in teamlist:
+            printString = printString + x
+
+        await ctx.send(printString)
+
+
+    else:
+        await ctx.send("Incorrect option! Valid options are: list / embedded.")
 
 @bot.command(name = 'findteam')
 async def findteam(ctx, team):
