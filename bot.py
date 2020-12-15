@@ -42,11 +42,12 @@ dbCol = db['teams']
 dblist = dbClient.list_database_names()
 print(dblist)
 """
-
+tokens = []
 
 @bot.event 
 async def on_ready():
     print(f'{bot.user.name} has connected!')
+    getTokens()
 
 @bot.command(name='99')
 async def nine_nine(ctx):
@@ -281,6 +282,9 @@ def generateToken():
 
     alphabet = string.ascii_letters + string.digits
     token = ''.join(secrets.choice(alphabet) for i in range(6))
+    if token in tokens: #if the token was already generated
+        print("Token already generated, regenerating token...")
+        return generateToken()
     print("Token generated: " + token)
     return token
 
@@ -291,5 +295,13 @@ def userNameCheck(username):
         return True
     else:
         return False
+
+def getTokens():
+    print("Recording all previously generated tokens....")
+    for x in dbCol.find({}, {"_id": 0, "token": 1}):
+        tokens.append(x['token'])
+    
+    print("Tokens saved!")
+
 
 bot.run(TOKEN)
