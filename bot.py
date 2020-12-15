@@ -42,11 +42,12 @@ dbCol = db['teams']
 dblist = dbClient.list_database_names()
 print(dblist)
 """
-
+tokens = []
 
 @bot.event 
 async def on_ready():
     print(f'{bot.user.name} has connected!')
+    getTokens()
 
 @bot.command(name='99')
 async def nine_nine(ctx):
@@ -194,15 +195,16 @@ async def listallteams(ctx, option):
         viceCaptain = ""
         count = 1
         teamlist = []
-        printString = "Team Name\tCountry\tCaptain\tVice Captain\n\n"
+        printString = "-\n-----------------------------------------------------------------------------\
+            \nSr.No\t|\tTeam Name\t|\tCountry\t|\tCaptain\t|\tVice Captain\
+            \n-----------------------------------------------------------------------------\n"
         for x in dbCol.find({}, {"_id": 0, "token": 0}):
             team = x["teamName"]
             country = x["country"].title()
             captain = x["captain"]
             viceCaptain = x["viceCaptain"]
-
-            #await ctx.send(f'{count}) \t{team}\t{country}\t{captain}\t{viceCaptain}\n\n')
-            teamString = "{}) \t{}\t{}\t{}\t{}\n".format(count, team, country, captain, viceCaptain)
+            #await ctx.send(f"{count}) \t\|\t{team}\t\|\t{country}\t\|\t{captain}\t\|\t{viceCaptain}\n\n")
+            teamString = "{count:3})\t {team:>20s} {country:>15s} {captain:>20s} {vicecaptain:>20s}\n".format(count = count, team = team, country = country, captain = captain, vicecaptain = viceCaptain)
             teamlist.append(teamString)
             count += 1
 
@@ -281,6 +283,9 @@ def generateToken():
 
     alphabet = string.ascii_letters + string.digits
     token = ''.join(secrets.choice(alphabet) for i in range(6))
+    if token in tokens: #if the token was already generated
+        print("Token already generated, regenerating token...")
+        return generateToken()
     print("Token generated: " + token)
     return token
 
@@ -291,5 +296,13 @@ def userNameCheck(username):
         return True
     else:
         return False
+
+def getTokens():
+    print("Recording all previously generated tokens....")
+    for x in dbCol.find({}, {"_id": 0, "token": 1}):
+        tokens.append(x['token'])
+    
+    print("Tokens saved!")
+
 
 bot.run(TOKEN)
