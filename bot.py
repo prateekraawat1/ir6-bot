@@ -195,15 +195,16 @@ async def listallteams(ctx, option):
         viceCaptain = ""
         count = 1
         teamlist = []
-        printString = "Team Name\tCountry\tCaptain\tVice Captain\n\n"
+        printString = "-\n-----------------------------------------------------------------------------\
+            \nSr.No\t|\tTeam Name\t|\tCountry\t|\tCaptain\t|\tVice Captain\
+            \n-----------------------------------------------------------------------------\n"
         for x in dbCol.find({}, {"_id": 0, "token": 0}):
             team = x["teamName"]
             country = x["country"].title()
             captain = x["captain"]
             viceCaptain = x["viceCaptain"]
-
-            #await ctx.send(f'{count}) \t{team}\t{country}\t{captain}\t{viceCaptain}\n\n')
-            teamString = "{}) \t{}\t{}\t{}\t{}\n".format(count, team, country, captain, viceCaptain)
+            #await ctx.send(f"{count}) \t\|\t{team}\t\|\t{country}\t\|\t{captain}\t\|\t{viceCaptain}\n\n")
+            teamString = "{count:3})\t {team:>20s} {country:>15s} {captain:>20s} {vicecaptain:>20s}\n".format(count = count, team = team, country = country, captain = captain, vicecaptain = viceCaptain)
             teamlist.append(teamString)
             count += 1
 
