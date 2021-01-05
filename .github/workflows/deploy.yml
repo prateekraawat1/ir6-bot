@@ -19,7 +19,7 @@ jobs:
         KEY: ${{ secrets.SSHKEY }}
       with:
         source: "."
-        target: "~/.ec2-user/DiscordBot"
+        target: "/ec2-user/DiscordBot"
 
     - name: Executing remote command
       uses: appleboy/ssh-action@master
