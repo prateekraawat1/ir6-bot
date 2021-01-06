@@ -19,7 +19,7 @@ jobs:
         PORT: ${{ secrets.PORT }}
       with:
         source: "."
-        target: "/ec2-user/DiscordBot"
+        target: "/DiscordBot"
 
     - name: Executing remote command
       uses: appleboy/ssh-action@master
