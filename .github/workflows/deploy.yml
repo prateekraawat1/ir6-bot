@@ -1,3 +1,5 @@
+name: Deploy Job
+
 on:
  push:
   branches: [ master ]    
@@ -27,5 +29,5 @@ jobs:
         host: ${{ secrets.HOST }}
         USERNAME: ${{ secrets.USERNAME }}
         PORT: ${{ secrets.PORT }}
-        KEY: ${{ secrets.SSHKEY }}
+        PASSWORD: ${{ secrets.PASSWORD }}
         script: ls -a
