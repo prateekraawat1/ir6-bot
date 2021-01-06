@@ -134,7 +134,7 @@ async def registerteam(ctx, country, captain, viceCaptain, *, team):
 async def register_error(ctx, error):
     if isinstance(error, commands.MissingRequiredArgument):
         await ctx.send('Missing required parameters! Usage `!registerteam [country] [captain] [vice-captain/coach] [teamname]`\
-            \nExample: `!registerteam India Testuser@1231 TestUser2@1231 Testing')
+            \nExample: `!registerteam India Testuser@1231 TestUser2@1231 Testing`')
 
 
 @bot.command(name="deleteteam")
