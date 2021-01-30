@@ -218,7 +218,7 @@ async def listallteams(ctx, option):
         await ctx.send("Incorrect option! Valid options are: list / embedded.")
 
 @bot.command(name = 'findteam')
-async def findteam(ctx, team):
+async def findteam(ctx, *, team):
     import re
     if (len(team)) < 3:
         await ctx.send("Enter at least 3 letters of the team name")
