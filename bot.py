@@ -134,7 +134,7 @@ async def registerteam(ctx, country, captain, viceCaptain, *, team):
 async def register_error(ctx, error):
     if isinstance(error, commands.MissingRequiredArgument):
         await ctx.send('Missing required parameters! Usage `!registerteam [country] [captain] [vice-captain/coach] [teamname]`\
-            \nExample: `!registerteam India Testuser@1231 TestUser2@1231 Testing`')
+            \nExample: `!registerteam India Testuser@1231 TestUser2@1231 Testing')
 
 
 @bot.command(name="deleteteam")
@@ -218,7 +218,7 @@ async def listallteams(ctx, option):
         await ctx.send("Incorrect option! Valid options are: list / embedded.")
 
 @bot.command(name = 'findteam')
-async def findteam(ctx, *, team):
+async def findteam(ctx, team):
     import re
     if (len(team)) < 3:
         await ctx.send("Enter at least 3 letters of the team name")
@@ -276,6 +276,15 @@ async def teams(ctx, sCountry, count = 5):
         embeded.add_field(name = "Captain", value = captain, inline = False)    
         embeded.add_field(name = "Vice Captain", value = viceCaptain, inline = False)
         await ctx.send(embed = embeded)
+
+@bot.command()
+async def load(ctx, extention):
+    bot.load_extension(f'cogs.{extention}')
+
+
+@bot.command()
+async def unload(ctx, extention):
+    bot.unload_extension(f'cogs.{extention}')
 
 def generateToken():
     import string
